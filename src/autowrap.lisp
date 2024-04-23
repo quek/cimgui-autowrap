@@ -7,5 +7,6 @@
                     :spec-path '(cimgui-autowrap spec)
                     ;; nil だと autowrap がとおらない
                     :no-accessors cl:t
-                    :no-functions cl:t)
+                    :no-functions cl:t
+                    :release-p cl:t)
 
