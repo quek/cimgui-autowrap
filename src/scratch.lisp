@@ -6,10 +6,9 @@
   (:windows "cimgui_sdl.dll"))
 (cffi:use-foreign-library libcimgui)
 
-(cimgui-autowrap:ig-create-context (cffi:null-pointer))
-;;⇒ #<CIMGUI-AUTOWRAP:IM-GUI-CONTEXT {#X00F78FD0}>
+(ig:create-context (cffi:null-pointer))
+;;⇒ #<IG:IM-GUI-CONTEXT {#X02A6ABC0}>
 
-(plus-c:c-fun cimgui-autowrap:ig-create-context (cffi:null-pointer))
-;;⇒ #<CIMGUI-AUTOWRAP:IM-GUI-CONTEXT {#X001D6FD0}>
+(ig:get-io)
+;;⇒ #<IG:IM-GUI-IO {#X02A6ABC8}>
 
-(plus-c:c-fun cimgui-autowrap:ig-im-file-get-size "/Users/ancient/.emacs")

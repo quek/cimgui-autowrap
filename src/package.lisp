@@ -1,1 +1,1 @@
-(defpackage :cimgui-autowrap)
+(defpackage :ig)
