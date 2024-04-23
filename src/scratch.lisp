@@ -7,6 +7,8 @@
 (cffi:use-foreign-library libcimgui)
 
 (cimgui-autowrap:ig-create-context (cffi:null-pointer))
+;;⇒ #<CIMGUI-AUTOWRAP:IM-GUI-CONTEXT {#X00F78FD0}>
+
 (plus-c:c-fun cimgui-autowrap:ig-create-context (cffi:null-pointer))
 ;;⇒ #<CIMGUI-AUTOWRAP:IM-GUI-CONTEXT {#X001D6FD0}>
 
