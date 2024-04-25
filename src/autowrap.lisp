@@ -10,5 +10,9 @@
                     ;; nil だと autowrap がとおらない
                     :no-accessors t
                     :no-functions nil
-                    :release-p t)
+                    :release-p t
+                    :symbol-exceptions (("igBegin" . "%BEGIN")
+                                        ("igButton" . "%BUTTON")
+                                        ("igDragFloat" . "%DRAG-FLOAT")
+                                        ("igSameLine" . "%SAME-LINE")))
 

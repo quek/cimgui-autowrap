@@ -8,4 +8,5 @@
    (:file "autowrap")
    (:static-file "cimgui-autowrap.h")
    (:module spec
-    :pathname "spec")))
+    :pathname "spec")
+   (:file "wrap")))
