@@ -8,18 +8,15 @@
          (setf (c-ref ,var ig:im-vec2 :y) (cadr ,x-y))
          ,@body))))
 
-(export (intern "BEGIN" :ig) :ig)
-(defun ig::begin (name &optional (open-p (cffi:null-pointer)) (flags 0))
+(defun ig:begin (name &optional (open-p (cffi:null-pointer)) (flags 0))
   (not (zerop (ig:%begin name open-p flags))))
 
-(export (intern "BEGIN-CHILD" :ig) :ig)
-(defun ig::begin-child (str-id &key (size '(0.0 0.0)) (child-flags 0) (window-flags 0))
+(defun ig:begin-child (str-id &key (size '(0.0 0.0)) (child-flags 0) (window-flags 0))
   (with-vec2 (size)
     (not (zerop (ig:begin-child-str str-id size child-flags window-flags)))))
 
 
-(export (intern "BUTTON" :ig) :ig)
-(defun ig::button (label &optional (size '(0.0 0.0)))
+(defun ig:button (label &optional (size '(0.0 0.0)))
   (not (zerop (%%button label size))))
 
 (defmethod %%button (label (size ig:im-vec2))
@@ -29,8 +26,7 @@
   (with-vec2 (size)
     (ig:%button label size)))
 
-(export (intern "DRAG-FLOAT" :ig) :ig)
-(defmacro ig::drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
+(defmacro ig:drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)
        (setf (autowrap:c-aref ,ptr 0 :float) ,v)
@@ -38,6 +34,5 @@
            (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
-(export (intern "SAME-LINE" :ig) :ig)
-(defun ig::same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
+(defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (ig:%same-line offset-from-start-x spacing))
