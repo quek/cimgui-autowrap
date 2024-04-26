@@ -8,6 +8,22 @@
          (setf (c-ref ,var ig:im-vec2 :y) (cadr ,x-y))
          ,@body))))
 
+(defmacro with-vec2* ((&rest vars) &body body)
+  (let* ((var (car vars))
+         (var (if (atom var)
+                  (list var)
+                  var)))
+    (if (null (cadr vars))
+        `(with-vec2 ,var
+           ,@body)
+        `(with-vec2 ,var
+           (with-vec2* (,@(cdr vars))
+             ,@body)))))
+
+(defmethod ig:add-line ((self ig:im-draw-list) (p1 list) (p2 list) col &optional (thickness 1.0))
+  (with-vec2* (p1 p2)
+    (ig:%im-draw-list-add-line self p1 p2 col thickness)))
+
 (defun ig:begin (name &optional (open-p (cffi:null-pointer)) (flags 0))
   (not (zerop (ig:%begin name open-p flags))))
 
@@ -15,6 +31,17 @@
   (with-vec2 (size)
     (not (zerop (ig:begin-child-str str-id size child-flags window-flags)))))
 
+(defun ig:get-window-pos ()
+  (autowrap:with-alloc (pos 'ig:im-vec2)
+    (ig:%get-window-pos pos)
+    (list (c-ref pos ig:im-vec2 :x)
+          (c-ref pos ig:im-vec2 :y))))
+
+(defun ig:get-window-size ()
+  (autowrap:with-alloc (size 'ig:im-vec2)
+    (ig:%get-window-size size)
+    (list (c-ref size ig:im-vec2 :x)
+          (c-ref size ig:im-vec2 :y))))
 
 (defun ig:button (label &optional (size '(0.0 0.0)))
   (not (zerop (%%button label size))))
@@ -34,5 +61,15 @@
            (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
+(defun ig:push-id ()
+  (ig:push-id-str (symbol-name (gensym))))
+
 (defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (ig:%same-line offset-from-start-x spacing))
+
+(defmethod ig:set-cursor-pos ((pos list))
+  (with-vec2 (pos)
+    (ig:%set-cursor-pos pos)))
+
+(defmethod ig:set-cursor-pos ((pos ig:im-vec2))
+  (ig:%set-cursor-pos pos))

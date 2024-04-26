@@ -5,6 +5,7 @@
   :pathname "src"
   :components
   ((:file "package")
+   (:file "patch")
    (:file "autowrap")
    (:static-file "cimgui-autowrap.h")
    (:module spec

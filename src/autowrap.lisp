@@ -13,6 +13,10 @@
                     :release-p t
                     :symbol-exceptions (("igBegin" . "%BEGIN")
                                         ("igButton" . "%BUTTON")
+                                        ("igGetWindowPos" . "%GET-WINDOW-POS")
+                                        ("igGetWindowSize" . "%GET-WINDOW-SIZE")
                                         ("igDragFloat" . "%DRAG-FLOAT")
-                                        ("igSameLine" . "%SAME-LINE")))
+                                        ("ImDrawList_AddLine" . "%IM-DRAW-LIST-ADD-LINE")
+                                        ("igSameLine" . "%SAME-LINE")
+                                        ("igSetCursorPos" . "%SET-CURSOR-POS")))
 
