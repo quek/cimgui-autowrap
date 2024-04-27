@@ -34,6 +34,12 @@
   (with-vec2 (size)
     (not (zerop (ig:begin-child-str str-id size child-flags window-flags)))))
 
+(defun ig:get-cursor-pos ()
+  (autowrap:with-alloc (pos 'ig:im-vec2)
+    (ig:%get-cursor-pos pos)
+    (list (c-ref pos ig:im-vec2 :x)
+          (c-ref pos ig:im-vec2 :y))))
+
 (defun ig:get-window-pos ()
   (autowrap:with-alloc (pos 'ig:im-vec2)
     (ig:%get-window-pos pos)

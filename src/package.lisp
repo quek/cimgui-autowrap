@@ -5,6 +5,7 @@
            #:begin
            #:begin-child
            #:button
+           #:get-cursor-pos
            #:get-window-pos
            #:get-window-size
            #:drag-float
