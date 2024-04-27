@@ -70,6 +70,16 @@
            (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
+(defun ig:invisible-button (label size &optional (flags 0))
+  (not (zerop (%%invisible-button label size flags))))
+
+(defmethod %%invisible-button (label (size ig:im-vec2) flags)
+  (ig:%invisible-button label size flags))
+
+(defmethod %%invisible-button (label (size list) flags)
+  (with-vec2 (size)
+    (ig:%invisible-button label size flags)))
+
 (defmacro ig:push-id ()
   `(ig:push-id-str ,(symbol-name (gensym))))
 

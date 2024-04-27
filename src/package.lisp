@@ -5,10 +5,11 @@
            #:begin
            #:begin-child
            #:button
+           #:drag-float
            #:get-cursor-pos
            #:get-window-pos
            #:get-window-size
-           #:drag-float
+           #:invisible-button
            #:push-id
            #:same-line
            #:set-cursor-pos))

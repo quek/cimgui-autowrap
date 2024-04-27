@@ -18,6 +18,7 @@
                                         ("igGetWindowSize" . "%GET-WINDOW-SIZE")
                                         ("igDragFloat" . "%DRAG-FLOAT")
                                         ("ImDrawList_AddLine" . "%IM-DRAW-LIST-ADD-LINE")
+                                        ("igInvisibleButton" . "%INVISIBLE-BUTTON")
                                         ("igSameLine" . "%SAME-LINE")
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")))
 
