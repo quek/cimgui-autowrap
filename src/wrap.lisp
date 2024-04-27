@@ -1,5 +1,8 @@
 (in-package :ig-wrap)
 
+(defconstant ig:+flt-min+ (ig:get-flt-min))
+(defconstant ig:+flt-max+ (ig:get-flt-max))
+
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
@@ -61,8 +64,8 @@
            (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
-(defun ig:push-id ()
-  (ig:push-id-str (symbol-name (gensym))))
+(defmacro ig:push-id ()
+  `(ig:push-id-str ,(symbol-name (gensym))))
 
 (defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (ig:%same-line offset-from-start-x spacing))

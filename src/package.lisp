@@ -1,5 +1,7 @@
 (defpackage :ig
-  (:export #:add-line
+  (:export #:+flt-min+
+           #:+flt-max+
+           #:add-line
            #:begin
            #:begin-child
            #:button

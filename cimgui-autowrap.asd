@@ -6,6 +6,7 @@
   :components
   ((:file "package")
    (:file "patch")
+   (:file "lib")
    (:file "autowrap")
    (:static-file "cimgui-autowrap.h")
    (:module spec
