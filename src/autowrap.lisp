@@ -12,6 +12,7 @@
                     :no-functions nil
                     :release-p t
                     :symbol-exceptions (("igBegin" . "%BEGIN")
+                                        ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
                                         ("igButton" . "%BUTTON")
                                         ("igGetCursorPos" . "%GET-CURSOR-POS")
                                         ("igGetWindowPos" . "%GET-WINDOW-POS")
@@ -19,6 +20,8 @@
                                         ("igDragFloat" . "%DRAG-FLOAT")
                                         ("ImDrawList_AddLine" . "%IM-DRAW-LIST-ADD-LINE")
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
+                                        ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
                                         ("igSameLine" . "%SAME-LINE")
-                                        ("igSetCursorPos" . "%SET-CURSOR-POS")))
+                                        ("igSetCursorPos" . "%SET-CURSOR-POS")
+                                        ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")))
 

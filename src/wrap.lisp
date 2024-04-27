@@ -3,6 +3,14 @@
 (defconstant ig:+flt-min+ (ig:get-flt-min))
 (defconstant ig:+flt-max+ (ig:get-flt-max))
 
+(defmacro with-bool ((var value) &body body)
+  `(autowrap:with-alloc (,var :pointer)
+     (setf (autowrap:c-aref ,var 0 :unsigned-char)
+           (if ,value 1 0))
+     (prog1 (not (zerop ,@body))
+       (setf ,value (not (zerop (autowrap:c-aref ,var 0 :unsigned-char)))))))
+
+(autowrap:find-function 'ig:begin-popup-modal)
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
@@ -13,7 +21,7 @@
 
 (defmacro with-vec2* ((&rest vars) &body body)
   (let* ((var (car vars))
-         (var (if (atom var)
+         (var (if (atom var) 
                   (list var)
                   var)))
     (if (null (cadr vars))
@@ -33,6 +41,12 @@
 (defun ig:begin-child (str-id &key (size '(0.0 0.0)) (child-flags 0) (window-flags 0))
   (with-vec2 (size)
     (not (zerop (ig:begin-child-str str-id size child-flags window-flags)))))
+
+(defmacro ig:begin-popup-modal (name &key (open-p nil open-p-p) (flags 0))
+  (if open-p-p
+      `(with-bool (var-open-p ,open-p)
+         (ig:%begin-popup-modal ,name var-open-p ,flags))
+      `(not (zerop (ig:%begin-popup-modal ,name (cffi:null-pointer) ,flags)))))
 
 (defun ig:get-cursor-pos ()
   (autowrap:with-alloc (pos 'ig:im-vec2)
@@ -70,6 +84,21 @@
            (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
+(defmacro ig:input-text (label var &key (flags 0)
+                                     (callback (cffi:null-pointer))
+                                     (user-data (cffi:null-pointer)))
+  `(let ((buf-size (max 80 (1+ (length ,var)))))
+     (autowrap:with-alloc (buf :char buf-size)
+       (loop for c across ,var
+             for i from 0
+             do (setf (autowrap:c-aref buf i :char) (char-code c))
+             finally (setf (autowrap:c-aref buf (1+ i) :char) 0))
+       (prog1 (not (zerop (with-vec2 (size-arg '(0.0 0.0))
+                            (ig:input-text-ex ,label (cffi:null-pointer)
+                                              buf buf-size size-arg ,flags
+                                              ,callback ,user-data))))
+         (setf ,var (cffi:foreign-string-to-lisp buf))))))
+
 (defun ig:invisible-button (label size &optional (flags 0))
   (not (zerop (%%invisible-button label size flags))))
 
@@ -79,6 +108,9 @@
 (defmethod %%invisible-button (label (size list) flags)
   (with-vec2 (size)
     (ig:%invisible-button label size flags)))
+
+(defun ig:is-window-appearing ()
+  (not (zerop (ig:%is-window-appearing))))
 
 (defmacro ig:push-id ()
   `(ig:push-id-str ,(symbol-name (gensym))))
@@ -92,3 +124,7 @@
 
 (defmethod ig:set-cursor-pos ((pos ig:im-vec2))
   (ig:%set-cursor-pos pos))
+
+(defun ig:set-keyboard-focus-here (&optional (offset 0))
+  (ig:%set-keyboard-focus-here offset))
+
