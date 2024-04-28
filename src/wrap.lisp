@@ -111,6 +111,9 @@
 (defun ig:is-key-pressed (key &key (repoeat t))
   (not (zerop (ig:is-key-pressed-bool key (if repoeat 1 0)))))
 
+(defun ig:open-popup (str-id &optional (popup-flags 0))
+  (ig:open-popup-str str-id popup-flags))
+
 (defmacro ig:push-id ()
   `(ig:push-id-str ,(symbol-name (gensym))))
 

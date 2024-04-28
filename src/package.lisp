@@ -13,6 +13,7 @@
            #:invisible-button
            #:is-key-pressed
            #:is-window-appearing
+           #:open-popup
            #:push-id
            #:same-line
            #:set-cursor-pos
