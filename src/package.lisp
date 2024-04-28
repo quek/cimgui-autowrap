@@ -11,11 +11,13 @@
            #:get-window-pos
            #:get-window-size
            #:invisible-button
+           #:is-key-pressed
            #:is-window-appearing
            #:push-id
            #:same-line
            #:set-cursor-pos
-           #:set-keyboard-focus-here))
+           #:set-keyboard-focus-here
+           #:set-next-window-size-constraints))
 
 (defpackage :ig-wrap
   (:use :cl :plus-c))

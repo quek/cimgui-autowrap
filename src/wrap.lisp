@@ -88,11 +88,7 @@
                                      (callback (cffi:null-pointer))
                                      (user-data (cffi:null-pointer)))
   `(let ((buf-size (max 80 (1+ (length ,var)))))
-     (autowrap:with-alloc (buf :char buf-size)
-       (loop for c across ,var
-             for i from 0
-             do (setf (autowrap:c-aref buf i :char) (char-code c))
-             finally (setf (autowrap:c-aref buf (1+ i) :char) 0))
+     (cffi:with-foreign-string (buf ,var)
        (prog1 (not (zerop (with-vec2 (size-arg '(0.0 0.0))
                             (ig:input-text-ex ,label (cffi:null-pointer)
                                               buf buf-size size-arg ,flags
@@ -112,6 +108,9 @@
 (defun ig:is-window-appearing ()
   (not (zerop (ig:%is-window-appearing))))
 
+(defun ig:is-key-pressed (key &key (repoeat t))
+  (not (zerop (ig:is-key-pressed-bool key (if repoeat 1 0)))))
+
 (defmacro ig:push-id ()
   `(ig:push-id-str ,(symbol-name (gensym))))
 
@@ -128,3 +127,8 @@
 (defun ig:set-keyboard-focus-here (&optional (offset 0))
   (ig:%set-keyboard-focus-here offset))
 
+(defun ig:set-next-window-size-constraints
+    (size-min size-max &key (custom-callback (cffi:null-pointer))
+                         (custom-callback-data (cffi:null-pointer)))
+  (with-vec2* (size-min size-max)
+    (ig:%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
