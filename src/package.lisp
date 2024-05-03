@@ -14,6 +14,7 @@
            #:is-key-pressed
            #:is-window-appearing
            #:open-popup
+           #:push-clip-rect
            #:push-id
            #:same-line
            #:set-cursor-pos

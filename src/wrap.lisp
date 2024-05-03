@@ -120,6 +120,11 @@
 (defmethod ig:push-id ((int integer))
   (ig:push-id-int int))
 
+(defun ig:push-clip-rect (clip-rect-min clip-rect-max &optional intersect-with-current-clip-rect)
+  (with-vec2* (clip-rect-min clip-rect-max)
+    (ig:%push-clip-rect clip-rect-min clip-rect-max
+                        (if intersect-with-current-clip-rect 1 0))))
+
 (defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (ig:%same-line offset-from-start-x spacing))
 

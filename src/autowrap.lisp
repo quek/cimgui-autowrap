@@ -21,6 +21,7 @@
                                         ("ImDrawList_AddLine" . "%IM-DRAW-LIST-ADD-LINE")
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
                                         ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
+                                        ("igPushClipRect". "%PUSH-CLIP-RECT")
                                         ("igSameLine" . "%SAME-LINE")
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")
                                         ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")
