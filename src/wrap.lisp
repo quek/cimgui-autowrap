@@ -114,8 +114,11 @@
 (defun ig:open-popup (str-id &optional (popup-flags 0))
   (ig:open-popup-str str-id popup-flags))
 
-(defmacro ig:push-id ()
-  `(ig:push-id-str ,(symbol-name (gensym))))
+(defmethod ig:push-id ((str string))
+  (ig:push-id-str str))
+
+(defmethod ig:push-id ((int integer))
+  (ig:push-id-int int))
 
 (defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (ig:%same-line offset-from-start-x spacing))
