@@ -19,7 +19,11 @@
            #:same-line
            #:set-cursor-pos
            #:set-keyboard-focus-here
-           #:set-next-window-size-constraints))
+           #:set-next-window-size-constraints
+
+           #:with-button-color
+           #:with-clip-rect
+           #:with-id))
 
 (defpackage :ig-wrap
-  (:use :cl :plus-c))
+  (:use :cl :plus-c :ig))

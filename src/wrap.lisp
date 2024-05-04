@@ -10,7 +10,6 @@
      (prog1 (not (zerop ,@body))
        (setf ,value (not (zerop (autowrap:c-aref ,var 0 :unsigned-char)))))))
 
-(autowrap:find-function 'ig:begin-popup-modal)
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
@@ -21,7 +20,7 @@
 
 (defmacro with-vec2* ((&rest vars) &body body)
   (let* ((var (car vars))
-         (var (if (atom var) 
+         (var (if (atom var)
                   (list var)
                   var)))
     (if (null (cadr vars))

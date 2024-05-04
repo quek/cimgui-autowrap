@@ -11,4 +11,5 @@
    (:static-file "cimgui-autowrap.h")
    (:module spec
     :pathname "spec")
-   (:file "wrap")))
+   (:file "wrap")
+   (:file "helper")))
