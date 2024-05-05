@@ -2,16 +2,21 @@
   (:export #:+flt-min+
            #:+flt-max+
            #:add-line
+           #:add-rect
+           #:add-rect-filled
            #:begin
            #:begin-child
            #:begin-popup-modal
            #:button
            #:drag-float
+           #:ensure-bool
            #:get-cursor-pos
+           #:get-mouse-pos
            #:get-window-pos
            #:get-window-size
            #:invisible-button
            #:is-key-pressed
+           #:is-mouse-double-clicked
            #:is-window-appearing
            #:open-popup
            #:push-clip-rect

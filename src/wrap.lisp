@@ -1,21 +1,21 @@
 (in-package :ig-wrap)
 
-(defconstant ig:+flt-min+ (ig:get-flt-min))
-(defconstant ig:+flt-max+ (ig:get-flt-max))
+(defconstant +flt-min+ (get-flt-min))
+(defconstant +flt-max+ (get-flt-max))
 
 (defmacro with-bool ((var value) &body body)
-  `(autowrap:with-alloc (,var :pointer)
+  `(autowrap:with-alloc (,var :unsigned-char)
      (setf (autowrap:c-aref ,var 0 :unsigned-char)
            (if ,value 1 0))
-     (prog1 (not (zerop ,@body))
-       (setf ,value (not (zerop (autowrap:c-aref ,var 0 :unsigned-char)))))))
+     (prog1 (ensure-to-bool (progn ,@body))
+       (setf ,value (ensure-to-bool (autowrap:c-aref ,var 0 :unsigned-char))))))
 
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
-       (autowrap:with-alloc (,var 'ig:im-vec2)
-         (setf (c-ref ,var ig:im-vec2 :x) (car ,x-y))
-         (setf (c-ref ,var ig:im-vec2 :y) (cadr ,x-y))
+       (autowrap:with-alloc (,var 'im-vec2)
+         (setf (c-ref ,var im-vec2 :x) (car ,x-y))
+         (setf (c-ref ,var im-vec2 :y) (cadr ,x-y))
          ,@body))))
 
 (defmacro with-vec2* ((&rest vars) &body body)
@@ -30,115 +30,144 @@
            (with-vec2* (,@(cdr vars))
              ,@body)))))
 
-(defmethod ig:add-line ((self ig:im-draw-list) (p1 list) (p2 list) col &optional (thickness 1.0))
+(defun ensure-to-bool (x)
+  (not (zerop x)))
+
+(defun ensure-from-bool (x)
+  (if x 1 0))
+
+(defmethod add-line ((self im-draw-list) (p1 list) (p2 list) col &key (thickness 1.0))
   (with-vec2* (p1 p2)
-    (ig:%im-draw-list-add-line self p1 p2 col thickness)))
+    (im-draw-list-add-line self p1 p2 col thickness)))
 
-(defun ig:begin (name &optional (open-p (cffi:null-pointer)) (flags 0))
-  (not (zerop (ig:%begin name open-p flags))))
+(defmethod add-rect ((self im-draw-list) (p-min list) (p-max list) col
+                     &key (rounding .0) (flags 0) (thickness 1.0))
+  (with-vec2* (p-min p-max)
+    (im-draw-list-add-rect self p-min p-max col rounding flags thickness)))
 
-(defun ig:begin-child (str-id &key (size '(0.0 0.0)) (child-flags 0) (window-flags 0))
-  (with-vec2 (size)
-    (not (zerop (ig:begin-child-str str-id size child-flags window-flags)))))
+(defmethod add-rect-filled ((self im-draw-list) (p-min list) (p-max list) col
+                            &key (rounding .0) (flags 0))
+  (with-vec2* (p-min p-max)
+    (im-draw-list-add-rect-filled self p-min p-max col rounding flags)))
 
-(defmacro ig:begin-popup-modal (name &key (open-p nil open-p-p) (flags 0))
+(defmacro begin (name &key (open-p nil open-p-p) (flags 0))
   (if open-p-p
       `(with-bool (var-open-p ,open-p)
-         (ig:%begin-popup-modal ,name var-open-p ,flags))
-      `(not (zerop (ig:%begin-popup-modal ,name (cffi:null-pointer) ,flags)))))
+         (%begin ,name var-open-p ,flags))
+      `(ensure-to-bool (%begin ,name (cffi:null-pointer) ,flags))))
 
-(defun ig:get-cursor-pos ()
-  (autowrap:with-alloc (pos 'ig:im-vec2)
-    (ig:%get-cursor-pos pos)
-    (list (c-ref pos ig:im-vec2 :x)
-          (c-ref pos ig:im-vec2 :y))))
+(defun begin-child (str-id &key (size '(0.0 0.0)) (child-flags 0) (window-flags 0))
+  (with-vec2 (size)
+    (ensure-to-bool (begin-child-str str-id size child-flags window-flags))))
 
-(defun ig:get-window-pos ()
-  (autowrap:with-alloc (pos 'ig:im-vec2)
-    (ig:%get-window-pos pos)
-    (list (c-ref pos ig:im-vec2 :x)
-          (c-ref pos ig:im-vec2 :y))))
+(defmacro begin-popup-modal (name &key (open-p nil open-p-p) (flags 0))
+  (if open-p-p
+      `(with-bool (var-open-p ,open-p)
+         (%begin-popup-modal ,name var-open-p ,flags))
+      `(ensure-to-bool (%begin-popup-modal ,name (cffi:null-pointer) ,flags))))
 
-(defun ig:get-window-size ()
-  (autowrap:with-alloc (size 'ig:im-vec2)
-    (ig:%get-window-size size)
-    (list (c-ref size ig:im-vec2 :x)
-          (c-ref size ig:im-vec2 :y))))
+(defun button (label &optional (size '(0.0 0.0)))
+  (ensure-to-bool (%%button label size)))
 
-(defun ig:button (label &optional (size '(0.0 0.0)))
-  (not (zerop (%%button label size))))
-
-(defmethod %%button (label (size ig:im-vec2))
-  (ig:%button label size))
+(defmethod %%button (label (size im-vec2))
+  (%button label size))
 
 (defmethod %%button (label (size list))
   (with-vec2 (size)
-    (ig:%button label size)))
+    (%button label size)))
 
-(defmacro ig:drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
+(defmacro drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)
        (setf (autowrap:c-aref ,ptr 0 :float) ,v)
        (prog1
-           (not (zerop (ig:%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags)))
+           (ensure-to-bool (%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
-(defmacro ig:input-text (label var &key (flags 0)
-                                     (callback (cffi:null-pointer))
-                                     (user-data (cffi:null-pointer)))
+
+(defun get-cursor-pos ()
+  (autowrap:with-alloc (pos 'im-vec2)
+    (%get-cursor-pos pos)
+    (list (c-ref pos im-vec2 :x)
+          (c-ref pos im-vec2 :y))))
+
+(defun get-mouse-pos ()
+  (autowrap:with-alloc (pos 'im-vec2)
+    (%get-mouse-pos pos)
+    (list (c-ref pos im-vec2 :x)
+          (c-ref pos im-vec2 :y))))
+
+(defun get-window-pos ()
+  (autowrap:with-alloc (pos 'im-vec2)
+    (%get-window-pos pos)
+    (list (c-ref pos im-vec2 :x)
+          (c-ref pos im-vec2 :y))))
+
+(defun get-window-size ()
+  (autowrap:with-alloc (size 'im-vec2)
+    (%get-window-size size)
+    (list (c-ref size im-vec2 :x)
+          (c-ref size im-vec2 :y))))
+
+(defmacro input-text (label var &key (flags 0)
+                                  (callback (cffi:null-pointer))
+                                  (user-data (cffi:null-pointer)))
   `(let ((buf-size (max 80 (1+ (length ,var)))))
      (cffi:with-foreign-string (buf ,var)
-       (prog1 (not (zerop (with-vec2 (size-arg '(0.0 0.0))
-                            (ig:input-text-ex ,label (cffi:null-pointer)
-                                              buf buf-size size-arg ,flags
-                                              ,callback ,user-data))))
+       (prog1 (ensure-to-bool (with-vec2 (size-arg '(0.0 0.0))
+                                (input-text-ex ,label (cffi:null-pointer)
+                                               buf buf-size size-arg ,flags
+                                               ,callback ,user-data)))
          (setf ,var (cffi:foreign-string-to-lisp buf))))))
 
-(defun ig:invisible-button (label size &optional (flags 0))
-  (not (zerop (%%invisible-button label size flags))))
+(defun invisible-button (label size &optional (flags 0))
+  (ensure-to-bool (%%invisible-button label size flags)))
 
-(defmethod %%invisible-button (label (size ig:im-vec2) flags)
-  (ig:%invisible-button label size flags))
+(defmethod %%invisible-button (label (size im-vec2) flags)
+  (%invisible-button label size flags))
 
 (defmethod %%invisible-button (label (size list) flags)
   (with-vec2 (size)
-    (ig:%invisible-button label size flags)))
+    (%invisible-button label size flags)))
 
-(defun ig:is-window-appearing ()
-  (not (zerop (ig:%is-window-appearing))))
+(defun is-window-appearing ()
+  (ensure-to-bool (%is-window-appearing)))
 
-(defun ig:is-key-pressed (key &key (repoeat t))
-  (not (zerop (ig:is-key-pressed-bool key (if repoeat 1 0)))))
+(defun is-key-pressed (key &key (repeat t))
+  (ensure-to-bool (is-key-pressed-bool key (ensure-from-bool repeat))))
 
-(defun ig:open-popup (str-id &optional (popup-flags 0))
-  (ig:open-popup-str str-id popup-flags))
+(defun is-mouse-double-clicked (button)
+  (ensure-to-bool (is-mouse-double-clicked-nil button)))
 
-(defmethod ig:push-id ((str string))
-  (ig:push-id-str str))
+(defun open-popup (str-id &optional (popup-flags 0))
+  (open-popup-str str-id popup-flags))
 
-(defmethod ig:push-id ((int integer))
-  (ig:push-id-int int))
+(defmethod push-id ((str string))
+  (push-id-str str))
 
-(defun ig:push-clip-rect (clip-rect-min clip-rect-max &optional intersect-with-current-clip-rect)
+(defmethod push-id ((int integer))
+  (push-id-int int))
+
+(defun push-clip-rect (clip-rect-min clip-rect-max &optional intersect-with-current-clip-rect)
   (with-vec2* (clip-rect-min clip-rect-max)
-    (ig:%push-clip-rect clip-rect-min clip-rect-max
-                        (if intersect-with-current-clip-rect 1 0))))
+    (%push-clip-rect clip-rect-min clip-rect-max
+                     (if intersect-with-current-clip-rect 1 0))))
 
-(defun ig:same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
-  (ig:%same-line offset-from-start-x spacing))
+(defun same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
+  (%same-line offset-from-start-x spacing))
 
-(defmethod ig:set-cursor-pos ((pos list))
+(defmethod set-cursor-pos ((pos list))
   (with-vec2 (pos)
-    (ig:%set-cursor-pos pos)))
+    (%set-cursor-pos pos)))
 
-(defmethod ig:set-cursor-pos ((pos ig:im-vec2))
-  (ig:%set-cursor-pos pos))
+(defmethod set-cursor-pos ((pos im-vec2))
+  (%set-cursor-pos pos))
 
-(defun ig:set-keyboard-focus-here (&optional (offset 0))
-  (ig:%set-keyboard-focus-here offset))
+(defun set-keyboard-focus-here (&optional (offset 0))
+  (%set-keyboard-focus-here offset))
 
-(defun ig:set-next-window-size-constraints
+(defun set-next-window-size-constraints
     (size-min size-max &key (custom-callback (cffi:null-pointer))
                          (custom-callback-data (cffi:null-pointer)))
   (with-vec2* (size-min size-max)
-    (ig:%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
+    (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
