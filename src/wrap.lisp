@@ -36,19 +36,19 @@
 (defun ensure-from-bool (x)
   (if x 1 0))
 
-(defmethod add-line ((self im-draw-list) (p1 list) (p2 list) col &key (thickness 1.0))
+(defmethod add-line ((draw-list im-draw-list) (p1 list) (p2 list) col &key (thickness 1.0))
   (with-vec2* (p1 p2)
-    (im-draw-list-add-line self p1 p2 col thickness)))
+    (im-draw-list-add-line draw-list p1 p2 col thickness)))
 
-(defmethod add-rect ((self im-draw-list) (p-min list) (p-max list) col
+(defmethod add-rect ((draw-list im-draw-list) (p-min list) (p-max list) col
                      &key (rounding .0) (flags 0) (thickness 1.0))
   (with-vec2* (p-min p-max)
-    (im-draw-list-add-rect self p-min p-max col rounding flags thickness)))
+    (im-draw-list-add-rect draw-list p-min p-max col rounding flags thickness)))
 
-(defmethod add-rect-filled ((self im-draw-list) (p-min list) (p-max list) col
+(defmethod add-rect-filled ((draw-list im-draw-list) (p-min list) (p-max list) col
                             &key (rounding .0) (flags 0))
   (with-vec2* (p-min p-max)
-    (im-draw-list-add-rect-filled self p-min p-max col rounding flags)))
+    (im-draw-list-add-rect-filled draw-list p-min p-max col rounding flags)))
 
 (defmacro begin (name &key (open-p nil open-p-p) (flags 0))
   (if open-p-p

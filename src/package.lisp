@@ -9,7 +9,8 @@
            #:begin-popup-modal
            #:button
            #:drag-float
-           #:ensure-bool
+           #:ensure-from-bool
+           #:ensure-to-bool
            #:get-cursor-pos
            #:get-mouse-pos
            #:get-window-pos
