@@ -10,6 +10,18 @@
      (prog1 (ensure-to-bool (progn ,@body))
        (setf ,value (ensure-to-bool (autowrap:c-aref ,var 0 :unsigned-char))))))
 
+(defmacro with-begin ((name &key open-p (flags 0)) &body body)
+  `(unwind-protect
+        (when (ig:begin ,name :open-p ,open-p :flags ,flags)
+          ,@body)
+     (ig:end)))
+
+(defmacro with-begin-child ((str-id &key (size ''(0.0 0.0)) (child-flags 0) (window-flags 0)) &body body)
+  `(unwind-protect
+        (when (ig:begin-child ,str-id :size ,size :child-flags ,child-flags :window-flags ,window-flags)
+          ,@body)
+     (ig:end-child)))
+
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
@@ -50,8 +62,12 @@
   (with-vec2* (p-min p-max)
     (im-draw-list-add-rect-filled draw-list p-min p-max col rounding flags)))
 
-(defmacro begin (name &key (open-p nil open-p-p) (flags 0))
-  (if open-p-p
+(defun add-text (draw-list pos col text)
+  (with-vec2 (pos)
+    (im-draw-list-add-text-vec2 draw-list pos col text (cffi:null-pointer))))
+
+(defmacro begin (name &key open-p (flags 0))
+  (if open-p
       `(with-bool (var-open-p ,open-p)
          (%begin ,name var-open-p ,flags))
       `(ensure-to-bool (%begin ,name (cffi:null-pointer) ,flags))))

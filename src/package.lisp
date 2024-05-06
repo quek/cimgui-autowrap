@@ -4,6 +4,7 @@
            #:add-line
            #:add-rect
            #:add-rect-filled
+           #:add-text
            #:begin
            #:begin-child
            #:begin-popup-modal
@@ -27,6 +28,8 @@
            #:set-keyboard-focus-here
            #:set-next-window-size-constraints
 
+           #:with-begin
+           #:with-begin-child
            #:with-button-color
            #:with-clip-rect
            #:with-id))
