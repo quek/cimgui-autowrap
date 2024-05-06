@@ -92,6 +92,20 @@
   (with-vec2 (size)
     (%button label size)))
 
+(defmacro combo (label current-item items
+                 &key (popup-max-height-in-items -1)
+                   (item-display-function #'princ))
+  `(cffi:with-foreign-string (foreign-items
+                              (with-output-to-string (s)
+                                (loop for item in ,items
+                                      do (format s "~a~c" (funcall ,item-display-function item) #\nul)
+                                      finally (write-char #\nul s))))
+     (cffi:with-foreign-object (current :int)
+       (setf (cffi:mem-ref current :int) (or (position ,current-item ,items) 0))
+       (prog1 (ensure-to-bool (ig:combo-str ,label current foreign-items ,popup-max-height-in-items))
+         (setf ,current-item (nth (cffi:mem-ref current :int)
+                                  ,items))))))
+
 (defmacro drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)

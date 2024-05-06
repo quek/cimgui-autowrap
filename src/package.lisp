@@ -9,6 +9,7 @@
            #:begin-child
            #:begin-popup-modal
            #:button
+           #:combo
            #:drag-float
            #:ensure-from-bool
            #:ensure-to-bool
