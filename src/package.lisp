@@ -19,7 +19,10 @@
            #:get-window-size
            #:invisible-button
            #:is-key-pressed
+           #:is-mouse-clicked
            #:is-mouse-double-clicked
+           #:is-mouse-dragging
+           #:is-mouse-released
            #:is-window-appearing
            #:open-popup
            #:push-clip-rect

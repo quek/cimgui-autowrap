@@ -20,6 +20,7 @@
                                         ("igGetWindowSize" . "%GET-WINDOW-SIZE")
                                         ("igDragFloat" . "%DRAG-FLOAT")
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
+                                        ("igIsMouseDragging" . "%IS-MOUSE-DRAGGING")
                                         ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
                                         ("igPushClipRect". "%PUSH-CLIP-RECT")
                                         ("igSameLine" . "%SAME-LINE")

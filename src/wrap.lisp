@@ -94,17 +94,19 @@
 
 (defmacro combo (label current-item items
                  &key (popup-max-height-in-items -1)
-                   (item-display-function #'princ))
-  `(cffi:with-foreign-string (foreign-items
-                              (with-output-to-string (s)
-                                (loop for item in ,items
-                                      do (format s "~a~c" (funcall ,item-display-function item) #\nul)
-                                      finally (write-char #\nul s))))
-     (cffi:with-foreign-object (current :int)
-       (setf (cffi:mem-ref current :int) (or (position ,current-item ,items) 0))
-       (prog1 (ensure-to-bool (ig:combo-str ,label current foreign-items ,popup-max-height-in-items))
-         (setf ,current-item (nth (cffi:mem-ref current :int)
-                                  ,items))))))
+                   (item-display-function ''princ-to-string))
+  (let ((%items (gensym)))
+    `(let ((,%items ,items))
+       (cffi:with-foreign-string (foreign-items
+                                  (with-output-to-string (s)
+                                    (loop for item in ,%items
+                                          do (format s "~a~c" (funcall ,item-display-function item) #\nul)
+                                          finally (write-char #\nul s))))
+         (cffi:with-foreign-object (current :int)
+           (setf (cffi:mem-ref current :int) (or (position ,current-item ,%items) 0))
+           (prog1 (ensure-to-bool (ig:combo-str ,label current foreign-items ,popup-max-height-in-items))
+             (setf ,current-item (nth (cffi:mem-ref current :int)
+                                      ,%items))))))))
 
 (defmacro drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
@@ -159,6 +161,16 @@
 (defmethod %%invisible-button (label (size list) flags)
   (with-vec2 (size)
     (%invisible-button label size flags)))
+
+(defun is-mouse-clicked (button &optional repeat)
+  (ensure-to-bool (is-mouse-clicked-bool button (ensure-from-bool repeat))))
+
+(defun is-mouse-dragging (button &optional (lock-threshold -1.0))
+  "if lock_threshold < 0.0f, uses io.MouseDraggingThreshold"
+  (ensure-to-bool (%is-mouse-dragging button lock-threshold)))
+
+(defun is-mouse-released (button)
+  (ensure-to-bool (is-mouse-released-nil button)))
 
 (defun is-window-appearing ()
   (ensure-to-bool (%is-window-appearing)))
