@@ -24,6 +24,7 @@
            #:is-mouse-dragging
            #:is-mouse-released
            #:is-window-appearing
+           #:is-window-hovered
            #:open-popup
            #:push-clip-rect
            #:push-id

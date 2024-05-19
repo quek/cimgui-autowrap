@@ -175,6 +175,9 @@
 (defun is-window-appearing ()
   (ensure-to-bool (%is-window-appearing)))
 
+(defun is-window-hovered (flags)
+  (ensure-to-bool (%is-window-hovered flags)))
+
 (defun is-key-pressed (key &key (repeat t))
   (ensure-to-bool (is-key-pressed-bool key (ensure-from-bool repeat))))
 

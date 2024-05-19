@@ -22,6 +22,7 @@
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
                                         ("igIsMouseDragging" . "%IS-MOUSE-DRAGGING")
                                         ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
+                                        ("igIsWindowHovered" . "%IS-WINDOW-HOVERED")
                                         ("igPushClipRect". "%PUSH-CLIP-RECT")
                                         ("igSameLine" . "%SAME-LINE")
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")
