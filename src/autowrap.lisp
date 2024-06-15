@@ -12,6 +12,7 @@
                     :no-functions nil
                     :release-p t
                     :symbol-exceptions (("igBegin" . "%BEGIN")
+                                        ("igBeginPopupContextItem" . "%BEGIN-POPUP-CONTEXT-ITEM")
                                         ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
                                         ("igButton" . "%BUTTON")
                                         ("igGetCursorPos" . "%GET-CURSOR-POS")

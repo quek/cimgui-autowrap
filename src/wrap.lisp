@@ -76,6 +76,12 @@
   (with-vec2 (size)
     (ensure-to-bool (begin-child-str str-id size child-flags window-flags))))
 
+(defun begin-popup-context-item (&key str-id
+                                   (popup-flags +im-gui-popup-flags-mouse-button-right+))
+  (ensure-to-bool
+   (%begin-popup-context-item (or str-id (cffi:null-pointer))
+                              popup-flags)))
+
 (defmacro begin-popup-modal (name &key (open-p nil open-p-p) (flags 0))
   (if open-p-p
       `(with-bool (var-open-p ,open-p)
@@ -184,6 +190,17 @@
 (defun is-mouse-double-clicked (button)
   (ensure-to-bool (is-mouse-double-clicked-nil button)))
 
+(defmacro menu-item (label &key (shortcut (cffi:null-pointer))
+                             selected ptr-selected
+                             (enabled t))
+  (if ptr-selected
+      `(with-bool (var-selected ,ptr-selected)
+         (menu-item-bool-ptr ,label ,shortcut var-selected ,(ensure-from-bool enabled)))
+      `(ensure-to-bool
+        (menu-item-bool ,label ,shortcut
+                        ,(ensure-from-bool selected)
+                        ,(ensure-from-bool enabled)))))
+
 (defun open-popup (str-id &optional (popup-flags 0))
   (open-popup-str str-id popup-flags))
 
@@ -216,3 +233,11 @@
                          (custom-callback-data (cffi:null-pointer)))
   (with-vec2* (size-min size-max)
     (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
+
+(defmacro with-popup-context-item ((&key
+                                      str-id
+                                      (popup-flags +im-gui-popup-flags-mouse-button-right+))
+                                   &body body)
+  `(when (begin-popup-context-item :str-id ,str-id :popup-flags ,popup-flags)
+     ,@body
+     (end-popup)))

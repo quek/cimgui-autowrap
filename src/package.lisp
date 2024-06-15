@@ -7,6 +7,7 @@
            #:add-text
            #:begin
            #:begin-child
+           #:begin-popup-context-item
            #:begin-popup-modal
            #:button
            #:combo
@@ -25,6 +26,7 @@
            #:is-mouse-released
            #:is-window-appearing
            #:is-window-hovered
+           #:menu-item
            #:open-popup
            #:push-clip-rect
            #:push-id
@@ -37,7 +39,8 @@
            #:with-begin-child
            #:with-button-color
            #:with-clip-rect
-           #:with-id))
+           #:with-id
+           #:with-popup-context-item))
 
 (defpackage :ig-wrap
   (:use :cl :plus-c :ig))
