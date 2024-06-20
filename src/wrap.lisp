@@ -150,13 +150,22 @@
 (defmacro input-text (label var &key (flags 0)
                                   (callback (cffi:null-pointer))
                                   (user-data (cffi:null-pointer)))
-  `(let ((buf-size (max 80 (1+ (length ,var)))))
-     (cffi:with-foreign-string (buf ,var)
-       (prog1 (ensure-to-bool (with-vec2 (size-arg '(0.0 0.0))
-                                (input-text-ex ,label (cffi:null-pointer)
-                                               buf buf-size size-arg ,flags
-                                               ,callback ,user-data)))
-         (setf ,var (cffi:foreign-string-to-lisp buf))))))
+  (let ((octets (gensym))
+        (buf (gensym))
+        (buf-size (gensym))
+        (size-arg (gensym)))
+    `(let* ((,octets (sb-ext:string-to-octets ,var))
+            (,buf-size (max 80 (1+ (length ,octets)))))
+       (cffi:with-foreign-object (,buf :char ,buf-size)
+         (loop for c across ,octets
+               for i from 0
+               do (setf (cffi:mem-aref ,buf :char i) c))
+         (setf (cffi:mem-aref ,buf :char (length ,octets)) 0)
+         (prog1 (ensure-to-bool (with-vec2 (,size-arg '(0.0 0.0))
+                                  (input-text-ex ,label (cffi:null-pointer)
+                                                 ,buf ,buf-size ,size-arg ,flags
+                                                 ,callback ,user-data)))
+           (setf ,var (cffi:foreign-string-to-lisp ,buf)))))))
 
 (defun invisible-button (label size &optional (flags 0))
   (ensure-to-bool (%%invisible-button label size flags)))
