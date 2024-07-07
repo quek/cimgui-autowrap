@@ -19,6 +19,7 @@
            #:get-window-pos
            #:get-window-size
            #:invisible-button
+           #:is-item-active
            #:is-key-pressed
            #:is-mouse-clicked
            #:is-mouse-double-clicked
@@ -39,8 +40,10 @@
            #:with-begin-child
            #:with-button-color
            #:with-clip-rect
+           #:with-group
            #:with-id
-           #:with-popup-context-item))
+           #:with-popup-context-item
+           #:with-styles))
 
 (defpackage :ig-wrap
   (:use :cl :plus-c :ig))

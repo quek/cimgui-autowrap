@@ -177,6 +177,9 @@
   (with-vec2 (size)
     (%invisible-button label size flags)))
 
+(defun is-item-active ()
+  (ensure-to-bool (%is-item-active)))
+
 (defun is-mouse-clicked (button &optional repeat)
   (ensure-to-bool (is-mouse-clicked-bool button (ensure-from-bool repeat))))
 
@@ -213,16 +216,39 @@
 (defun open-popup (str-id &optional (popup-flags 0))
   (open-popup-str str-id popup-flags))
 
+(defmethod pop-style (var (val integer))
+  (ig:pop-style-color 1))
+
+(defmethod pop-style (var (val list))
+  (ig:pop-style-var 1))
+
+(defmethod pop-style (var (val float))
+  (ig:pop-style-var 1))
+
+(defun push-clip-rect (clip-rect-min clip-rect-max &optional intersect-with-current-clip-rect)
+  (with-vec2* (clip-rect-min clip-rect-max)
+    (%push-clip-rect clip-rect-min clip-rect-max
+                     (if intersect-with-current-clip-rect 1 0))))
+
 (defmethod push-id ((str string))
   (push-id-str str))
 
 (defmethod push-id ((int integer))
   (push-id-int int))
 
-(defun push-clip-rect (clip-rect-min clip-rect-max &optional intersect-with-current-clip-rect)
-  (with-vec2* (clip-rect-min clip-rect-max)
-    (%push-clip-rect clip-rect-min clip-rect-max
-                     (if intersect-with-current-clip-rect 1 0))))
+(defmethod push-style (var (val integer))
+  (ig:push-style-color-u32 var val))
+
+(defmethod push-style (var (val integer))
+  (ig:push-style-color-u32 var val))
+
+(defmethod push-style (var (val float))
+  (ig:push-style-var-float var val))
+
+(defmethod push-style (var (val list))
+  (with-vec2 (val)
+    (ig:push-style-var-vec2 var val)))
+
 
 (defun same-line (&optional (offset-from-start-x 0.0) (spacing -1.0))
   (%same-line offset-from-start-x spacing))
@@ -243,6 +269,13 @@
   (with-vec2* (size-min size-max)
     (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
 
+(defmacro with-group (&body body)
+  `(progn
+     (ig:begin-group)
+     (unwind-protect
+          (progn ,@body)
+       (ig:end-group))))
+
 (defmacro with-popup-context-item ((&key
                                       str-id
                                       (popup-flags +im-gui-popup-flags-mouse-button-right+))
@@ -250,3 +283,18 @@
   `(when (begin-popup-context-item :str-id ,str-id :popup-flags ,popup-flags)
      ,@body
      (end-popup)))
+
+(defmacro with-style ((var val) &body body)
+  (let (($var (gensym "VAR"))
+        ($val (gensym "VAL")))
+    `(let ((,$var ,var)
+           (,$val ,val))
+       (push-style ,$var ,$val)
+       (unwind-protect (progn ,@body)
+         (pop-style ,$var ,$val)))))
+
+(defmacro with-styles ((&rest var-val-list) &body body)
+  (if (endp var-val-list)
+      `(progn ,@body)
+      `(with-style ,(car var-val-list)
+         (with-styles ,(cdr var-val-list) ,@body))))

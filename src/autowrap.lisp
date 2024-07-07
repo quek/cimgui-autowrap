@@ -21,6 +21,7 @@
                                         ("igGetWindowSize" . "%GET-WINDOW-SIZE")
                                         ("igDragFloat" . "%DRAG-FLOAT")
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
+                                        ("igIsItemActive" . "%IS-ITEM-ACTIVE")
                                         ("igIsMouseDragging" . "%IS-MOUSE-DRAGGING")
                                         ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
                                         ("igIsWindowHovered" . "%IS-WINDOW-HOVERED")
