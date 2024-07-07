@@ -12,6 +12,7 @@
            #:button
            #:combo
            #:drag-float
+           #:drag-scalar
            #:ensure-from-bool
            #:ensure-to-bool
            #:get-cursor-pos

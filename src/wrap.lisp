@@ -122,6 +122,36 @@
            (ensure-to-bool (%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
+(defmacro drag-scalar (lable data-type data
+                       &key (speed 1.0)
+                         min max
+                         (format (cffi:null-pointer))
+                         (flags 0))
+  (let ((ptr (gensym "PTR"))
+        (p-min (gensym "MIN"))
+        (p-max (gensym "MAX"))
+        (ptr-type (ecase data-type
+                     (+im-gui-data-type-s8+ :int8)
+                     (+im-gui-data-type-u8+ :uint8)
+                     (+im-gui-data-type-s16+ :int16)
+                     (+im-gui-data-type-u16+ :uint16)
+                     (+im-gui-data-type-s32+ :int32)
+                     (+im-gui-data-type-u32+ :uint32)
+                     (+im-gui-data-type-s64+ :int64)
+                     (+im-gui-data-type-u64+ :uint64)
+                     (+im-gui-data-type-float+ :float)
+                     (+im-gui-data-type-double+ :double))))
+    `(autowrap:with-many-alloc ((,ptr ,ptr-type)
+                                ,@(when min
+                                    `((,p-min ,ptr-type)))
+                                ,@(when max
+                                    `((,p-max ,ptr-type))))
+       (setf (autowrap:c-aref ,ptr 0 ,ptr-type) ,data)
+       ,@(when min `((setf (autowrap:c-aref ,p-min 0 ,ptr-type) ,min)))
+       ,@(when max `((setf (autowrap:c-aref ,p-max 0 ,ptr-type) ,max)))
+       (prog1
+           (ensure-to-bool (%drag-scalar ,lable ,data-type ,ptr ,speed ,p-min ,p-max ,format ,flags))
+         (setf ,data (autowrap:c-aref ,ptr 0 ,ptr-type))))))
 
 (defun get-cursor-pos ()
   (autowrap:with-alloc (pos 'im-vec2)
