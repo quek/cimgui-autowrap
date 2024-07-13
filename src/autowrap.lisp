@@ -23,6 +23,7 @@
                                         ("igDragScalar" . "%DRAG-SCALAR")
                                         ("igInvisibleButton" . "%INVISIBLE-BUTTON")
                                         ("igIsItemActive" . "%IS-ITEM-ACTIVE")
+                                        ("igIsItemHovered" . "%IS-ITEM-HOVERED")
                                         ("igIsMouseDragging" . "%IS-MOUSE-DRAGGING")
                                         ("igIsWindowAppearing" . "%IS-WINDOW-APPEARING")
                                         ("igIsWindowHovered" . "%IS-WINDOW-HOVERED")

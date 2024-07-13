@@ -21,6 +21,7 @@
            #:get-window-size
            #:invisible-button
            #:is-item-active
+           #:is-item-hovered
            #:is-key-pressed
            #:is-mouse-clicked
            #:is-mouse-double-clicked

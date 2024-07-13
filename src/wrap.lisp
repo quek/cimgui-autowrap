@@ -210,6 +210,9 @@
 (defun is-item-active ()
   (ensure-to-bool (%is-item-active)))
 
+(defun is-item-hovered (&optional (flag 0))
+  (ensure-to-bool (%is-item-hovered flag)))
+
 (defun is-mouse-clicked (button &optional repeat)
   (ensure-to-bool (is-mouse-clicked-bool button (ensure-from-bool repeat))))
 
