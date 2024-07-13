@@ -186,10 +186,10 @@
         (size-arg (gensym)))
     `(let* ((,octets (sb-ext:string-to-octets ,var))
             (,buf-size (max 80 (1+ (length ,octets)))))
-       (cffi:with-foreign-object (,buf :char ,buf-size)
+       (cffi:with-foreign-object (,buf :uchar ,buf-size)
          (loop for c across ,octets
                for i from 0
-               do (setf (cffi:mem-aref ,buf :char i) c))
+               do (setf (cffi:mem-aref ,buf :uchar i) c))
          (setf (cffi:mem-aref ,buf :char (length ,octets)) 0)
          (prog1 (ensure-to-bool (with-vec2 (,size-arg '(0.0 0.0))
                                   (input-text-ex ,label (cffi:null-pointer)
