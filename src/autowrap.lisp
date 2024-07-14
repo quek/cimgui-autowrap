@@ -32,4 +32,3 @@
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")
                                         ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")
                                         ("igSetNextWindowSizeConstraints" . "%SET-NEXT-WINDOW-SIZE-CONSTRAINTS")))
-

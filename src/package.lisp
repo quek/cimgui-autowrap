@@ -42,6 +42,8 @@
            #:with-begin-child
            #:with-button-color
            #:with-clip-rect
+           #:with-drag-drop-source
+           #:with-drag-drop-target
            #:with-group
            #:with-id
            #:with-popup-context-item

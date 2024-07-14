@@ -114,6 +114,15 @@
              (setf ,current-item (nth (cffi:mem-ref current :int)
                                       ,%items))))))))
 
+;;; 引数に size_t があると定義できないみたい
+(AUTOWRAP:DEFINE-FOREIGN-FUNCTION
+    '(IG::%SET-DRAG-DROP-PAYLOAD "igSetDragDropPayload") ':UNSIGNED-CHAR
+  '((IG::|type| (:STRING)) (IG::|data| (:POINTER :VOID))
+    (IG::|sz| :unsigned-long-long) (IG::|cond| IG:IM-GUI-COND)))
+(AUTOWRAP:DEFINE-CFUN IG::%SET-DRAG-DROP-PAYLOAD :ig)
+(defun set-drag-drop-payload (type &key (data (cffi:null-pointer)) (data-size 0) (cond 0))
+  (ensure-to-bool (IG::%SET-DRAG-DROP-PAYLOAD type data data-size cond)))
+
 (defmacro drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)
@@ -292,6 +301,18 @@
 
 (defmethod set-cursor-pos ((pos im-vec2))
   (%set-cursor-pos pos))
+
+(defmacro with-drag-drop-source ((&optional (flag 0)) &body body)
+  `(when (ensure-to-bool (ig:begin-drag-drop-source ,flag))
+     (unwind-protect
+          (progn ,@body)
+       (ig:end-drag-drop-source))))
+
+(defmacro with-drag-drop-target (&body body)
+  `(when (ensure-to-bool (ig:begin-drag-drop-target))
+     (unwind-protect
+          (progn ,@body)
+       (ig:end-drag-drop-target))))
 
 (defun set-keyboard-focus-here (&optional (offset 0))
   (%set-keyboard-focus-here offset))
