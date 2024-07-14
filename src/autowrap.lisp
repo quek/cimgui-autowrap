@@ -30,5 +30,6 @@
                                         ("igPushClipRect". "%PUSH-CLIP-RECT")
                                         ("igSameLine" . "%SAME-LINE")
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")
+                                        ("igSetDragDropPayload" . "%SET-DRAG-DROP-PAYLOAD")
                                         ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")
                                         ("igSetNextWindowSizeConstraints" . "%SET-NEXT-WINDOW-SIZE-CONSTRAINTS")))

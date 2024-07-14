@@ -35,6 +35,7 @@
            #:push-id
            #:same-line
            #:set-cursor-pos
+           #:set-drag-drop-payload
            #:set-keyboard-focus-here
            #:set-next-window-size-constraints
 
