@@ -1,6 +1,7 @@
 (defpackage :ig
   (:export #:+flt-min+
            #:+flt-max+
+           #:accept-drag-drop-payload
            #:add-line
            #:add-rect
            #:add-rect-filled
@@ -43,6 +44,7 @@
            #:with-begin-child
            #:with-button-color
            #:with-clip-rect
+           #:with-disabled
            #:with-drag-drop-source
            #:with-drag-drop-target
            #:with-group

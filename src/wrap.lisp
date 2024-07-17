@@ -48,6 +48,10 @@
 (defun ensure-from-bool (x)
   (if x 1 0))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun accept-drag-drop-payload (type &optional (flags 0))
+  (%accept-drag-drop-payload type flags))
+
 (defmethod add-line ((draw-list im-draw-list) (p1 list) (p2 list) col &key (thickness 1.0))
   (with-vec2* (p1 p2)
     (im-draw-list-add-line draw-list p1 p2 col thickness)))
@@ -109,17 +113,18 @@
                                           do (format s "~a~c" (funcall ,item-display-function item) #\nul)
                                           finally (write-char #\nul s))))
          (cffi:with-foreign-object (current :int)
-           (setf (cffi:mem-ref current :int) (or (position ,current-item ,%items) 0))
+           (setf (cffi:mem-ref current :int) (or (position ,current-item ,%items :test #'equal) 0))
            (prog1 (ensure-to-bool (ig:combo-str ,label current foreign-items ,popup-max-height-in-items))
              (setf ,current-item (nth (cffi:mem-ref current :int)
                                       ,%items))))))))
 
 ;;; 引数に size_t があると定義できないみたい
-(AUTOWRAP:DEFINE-FOREIGN-FUNCTION
-    '(IG::%SET-DRAG-DROP-PAYLOAD "igSetDragDropPayload") ':UNSIGNED-CHAR
-  '((IG::|type| (:STRING)) (IG::|data| (:POINTER :VOID))
-    (IG::|sz| :unsigned-long-long) (IG::|cond| IG:IM-GUI-COND)))
-(AUTOWRAP:DEFINE-CFUN IG::%SET-DRAG-DROP-PAYLOAD :ig)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (AUTOWRAP:DEFINE-FOREIGN-FUNCTION
+      '(IG::%SET-DRAG-DROP-PAYLOAD "igSetDragDropPayload") ':UNSIGNED-CHAR
+    '((IG::|type| (:STRING)) (IG::|data| (:POINTER :VOID))
+      (IG::|sz| :unsigned-long-long) (IG::|cond| IG:IM-GUI-COND)))
+  (AUTOWRAP:DEFINE-CFUN IG::%SET-DRAG-DROP-PAYLOAD :ig))
 (defun set-drag-drop-payload (type &key (data (cffi:null-pointer)) (data-size 0) (cond 0))
   (ensure-to-bool (IG::%SET-DRAG-DROP-PAYLOAD type data data-size cond)))
 
@@ -329,6 +334,12 @@
      (unwind-protect
           (progn ,@body)
        (ig:end-group))))
+
+(defmacro with-disabled ((&optional (disabled t)) &body body)
+  `(progn
+     (begin-disabled (ensure-from-bool ,disabled))
+     (unwind-protect (progn ,@body)
+       (end-disabled))))
 
 (defmacro with-popup-context-item ((&key
                                       str-id

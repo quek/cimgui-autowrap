@@ -11,7 +11,8 @@
                     :no-accessors t
                     :no-functions nil
                     :release-p t
-                    :symbol-exceptions (("igBegin" . "%BEGIN")
+                    :symbol-exceptions (("igAcceptDragDropPayload" . "%ACCEPT-DRAG-DROP-PAYLOAD")
+                                        ("igBegin" . "%BEGIN")
                                         ("igBeginPopupContextItem" . "%BEGIN-POPUP-CONTEXT-ITEM")
                                         ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
                                         ("igButton" . "%BUTTON")
