@@ -50,6 +50,7 @@
            #:with-group
            #:with-id
            #:with-popup-context-item
+           #:with-popup-modal
            #:with-styles))
 
 (defpackage :ig-wrap

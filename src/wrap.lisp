@@ -86,8 +86,8 @@
    (%begin-popup-context-item (or str-id (cffi:null-pointer))
                               popup-flags)))
 
-(defmacro begin-popup-modal (name &key (open-p nil open-p-p) (flags 0))
-  (if open-p-p
+(defmacro begin-popup-modal (name &key open-p (flags 0))
+  (if open-p
       `(with-bool (var-open-p ,open-p)
          (%begin-popup-modal ,name var-open-p ,flags))
       `(ensure-to-bool (%begin-popup-modal ,name (cffi:null-pointer) ,flags))))
@@ -348,6 +348,11 @@
   `(when (begin-popup-context-item :str-id ,str-id :popup-flags ,popup-flags)
      ,@body
      (end-popup)))
+
+(defmacro with-popup-modal ((name &key open-p (flags 0)) &body body)
+  `(when (ig:begin-popup-modal ,name :open-p ,open-p :flags ,flags)
+     ,@body
+     (ig:end-popup)))
 
 (defmacro with-style ((var val) &body body)
   (let (($var (gensym "VAR"))
