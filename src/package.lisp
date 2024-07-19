@@ -11,6 +11,7 @@
            #:begin-popup-context-item
            #:begin-popup-modal
            #:button
+           #:color-picker4
            #:combo
            #:drag-float
            #:drag-scalar

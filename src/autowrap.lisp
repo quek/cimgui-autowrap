@@ -16,6 +16,7 @@
                                         ("igBeginPopupContextItem" . "%BEGIN-POPUP-CONTEXT-ITEM")
                                         ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
                                         ("igButton" . "%BUTTON")
+                                        ("igColorPicker4" . "%COLOR-PICKER4")
                                         ("igGetCursorPos" . "%GET-CURSOR-POS")
                                         ("igGetMousePos" . "%GET-MOUSE-POS")
                                         ("igGetWindowPos" . "%GET-WINDOW-POS")

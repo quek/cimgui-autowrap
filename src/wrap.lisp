@@ -22,6 +22,16 @@
           ,@body)
      (ig:end-child)))
 
+(defmacro with-color4 ((var color) &body body)
+  (let (($color (gensym)))
+    `(let ((,$color ,color))
+       (autowrap:with-alloc (,var :float 4)
+         (setf (c-ref ,var :float 0) (/ (ldb (byte 8 0) ,$color) 255.0))
+         (setf (c-ref ,var :float 1) (/ (ldb (byte 8 8) ,$color) 255.0))
+         (setf (c-ref ,var :float 2) (/ (ldb (byte 8 16) ,$color) 255.0))
+         (setf (c-ref ,var :float 3) (/ (ldb (byte 8 24) ,$color) 255.0))
+         ,@body))))
+
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
@@ -101,6 +111,17 @@
 (defmethod %%button (label (size list))
   (with-vec2 (size)
     (%button label size)))
+
+(defmacro color-picker4 (label color &key (flags 0) (ref-col (cffi:null-pointer)))
+  (let ((ret (gensym "RET")))
+    `(with-color4 (color ,color)
+       (let ((,ret (ensure-to-bool (%color-picker4 ,label color ,flags ,ref-col))))
+         (when ,ret
+           (setf (ldb (byte 8 0) ,color) (floor (* (c-ref color :float 0) 255.0)))
+           (setf (ldb (byte 8 8) ,color) (floor (* (c-ref color :float 1) 255.0)))
+           (setf (ldb (byte 8 16) ,color) (floor (* (c-ref color :float 2) 255.0)))
+           (setf (ldb (byte 8 24) ,color) (floor (* (c-ref color :float 3) 255.0))))
+         ,ret))))
 
 (defmacro combo (label current-item items
                  &key (popup-max-height-in-items -1)
