@@ -16,7 +16,7 @@
           ,@body)
      (ig:end)))
 
-(defmacro with-begin-child ((str-id &key (size ''(0.0 0.0)) (child-flags 0) (window-flags 0)) &body body)
+(defmacro with-child ((str-id &key (size ''(0.0 0.0)) (child-flags 0) (window-flags 0)) &body body)
   `(unwind-protect
         (when (ig:begin-child ,str-id :size ,size :child-flags ,child-flags :window-flags ,window-flags)
           ,@body)
@@ -31,6 +31,15 @@
          (setf (c-ref ,var :float 2) (/ (ldb (byte 8 16) ,$color) 255.0))
          (setf (c-ref ,var :float 3) (/ (ldb (byte 8 24) ,$color) 255.0))
          ,@body))))
+
+(defmacro with-color4* ((&rest vars) &body body)
+  (let* ((var (car vars)))
+    (if (null (cadr vars))
+        `(with-color4 ,var
+           ,@body)
+        `(with-color4 ,var
+           (with-color4* (,@(cdr vars))
+             ,@body)))))
 
 (defmacro with-vec2 ((var &optional x-y-list) &body body)
   (let ((x-y (gensym)))
@@ -112,10 +121,13 @@
   (with-vec2 (size)
     (%button label size)))
 
-(defmacro color-picker4 (label color &key (flags 0) (ref-col (cffi:null-pointer)))
+(defmacro color-picker4 (label color &key (flags 0) ref-col)
   (let ((ret (gensym "RET")))
-    `(with-color4 (color ,color)
-       (let ((,ret (ensure-to-bool (%color-picker4 ,label color ,flags ,ref-col))))
+    `(with-color4* ((color ,color)
+                    ,@(when ref-col
+                        `((ref-col ,ref-col))))
+       (let* (,@(unless ref-col `((ref-col (cffi:null-pointer))))
+              (,ret (ensure-to-bool (%color-picker4 ,label color ,flags ref-col))))
          (when ,ret
            (setf (ldb (byte 8 0) ,color) (floor (* (c-ref color :float 0) 255.0)))
            (setf (ldb (byte 8 8) ,color) (floor (* (c-ref color :float 1) 255.0)))

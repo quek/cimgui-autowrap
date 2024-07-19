@@ -42,7 +42,7 @@
            #:set-next-window-size-constraints
 
            #:with-begin
-           #:with-begin-child
+           #:with-child
            #:with-button-color
            #:with-clip-rect
            #:with-disabled
