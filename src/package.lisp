@@ -18,10 +18,12 @@
            #:ensure-from-bool
            #:ensure-to-bool
            #:get-cursor-pos
+           #:get-drag-drop-payload
            #:get-mouse-pos
            #:get-window-pos
            #:get-window-size
            #:invisible-button
+           #:is-data-type
            #:is-item-active
            #:is-item-hovered
            #:is-key-pressed
@@ -52,7 +54,8 @@
            #:with-id
            #:with-popup-context-item
            #:with-popup-modal
-           #:with-styles))
+           #:with-styles
+           #:with-tooltip))
 
 (defpackage :ig-wrap
   (:use :cl :plus-c :ig))

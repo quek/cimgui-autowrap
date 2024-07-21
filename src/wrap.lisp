@@ -69,7 +69,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun accept-drag-drop-payload (type &optional (flags 0))
-  (%accept-drag-drop-payload type flags))
+  (let ((payload (%accept-drag-drop-payload type flags)))
+    (if (autowrap:wrapper-null-p payload)
+        nil
+        payload)))
 
 (defmethod add-line ((draw-list im-draw-list) (p1 list) (p2 list) col &key (thickness 1.0))
   (with-vec2* (p1 p2)
@@ -206,6 +209,12 @@
     (list (c-ref pos im-vec2 :x)
           (c-ref pos im-vec2 :y))))
 
+(defun get-drag-drop-payload ()
+  (let ((payload (%get-drag-drop-payload)))
+    (if (autowrap:wrapper-null-p payload)
+        nil
+        payload)))
+
 (defun get-mouse-pos ()
   (autowrap:with-alloc (pos 'im-vec2)
     (%get-mouse-pos pos)
@@ -253,6 +262,9 @@
 (defmethod %%invisible-button (label (size list) flags)
   (with-vec2 (size)
     (%invisible-button label size flags)))
+
+(defun is-data-type (payload data-type)
+  (ensure-to-bool (ig:im-gui-payload-is-data-type payload data-type)))
 
 (defun is-item-active ()
   (ensure-to-bool (%is-item-active)))
@@ -401,3 +413,9 @@
       `(progn ,@body)
       `(with-style ,(car var-val-list)
          (with-styles ,(cdr var-val-list) ,@body))))
+
+(defmacro with-tooltip (&body body)
+  `(progn
+     (ig:begin-tooltip)
+     (unwind-protect (progn ,@body)
+       (ig:end-tooltip))))

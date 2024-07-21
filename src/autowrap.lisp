@@ -18,6 +18,7 @@
                                         ("igButton" . "%BUTTON")
                                         ("igColorPicker4" . "%COLOR-PICKER4")
                                         ("igGetCursorPos" . "%GET-CURSOR-POS")
+                                        ("igGetDragDropPayload" . "%GET-DRAG-DROP-PAYLOAD")
                                         ("igGetMousePos" . "%GET-MOUSE-POS")
                                         ("igGetWindowPos" . "%GET-WINDOW-POS")
                                         ("igGetWindowSize" . "%GET-WINDOW-SIZE")
