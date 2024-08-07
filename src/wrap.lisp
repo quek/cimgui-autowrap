@@ -164,12 +164,12 @@
 (defun set-drag-drop-payload (type &key (data (cffi:null-pointer)) (data-size 0) (cond 0))
   (ensure-to-bool (IG::%SET-DRAG-DROP-PAYLOAD type data data-size cond)))
 
-(defmacro drag-float (lable v &key (v-speed 1.0) (v-min 0.0) (v-max 0.0) (format "%.3f") (flags 0))
+(defmacro drag-float (lable v &key (speed 1.0) (min 0.0) (max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)
        (setf (autowrap:c-aref ,ptr 0 :float) ,v)
        (prog1
-           (ensure-to-bool (%drag-float ,lable ,ptr ,v-speed ,v-min ,v-max ,format ,flags))
+           (ensure-to-bool (%drag-float ,lable ,ptr ,speed ,min ,max ,format ,flags))
          (setf ,v (autowrap:c-aref ,ptr 0 :float))))))
 
 (defmacro drag-scalar (lable data-type data
@@ -278,6 +278,9 @@
 (defun is-mouse-dragging (button &optional (lock-threshold -1.0))
   "if lock_threshold < 0.0f, uses io.MouseDraggingThreshold"
   (ensure-to-bool (%is-mouse-dragging button lock-threshold)))
+
+(defun is-mouse-down (button)
+  (ensure-to-bool (is-mouse-down-nil button)))
 
 (defun is-mouse-released (button)
   (ensure-to-bool (is-mouse-released-nil button)))

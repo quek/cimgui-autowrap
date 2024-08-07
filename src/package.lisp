@@ -29,6 +29,7 @@
            #:is-key-pressed
            #:is-mouse-clicked
            #:is-mouse-double-clicked
+           #:is-mouse-down
            #:is-mouse-dragging
            #:is-mouse-released
            #:is-window-appearing
