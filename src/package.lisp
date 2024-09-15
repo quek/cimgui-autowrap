@@ -13,6 +13,7 @@
            #:button
            #:color-picker4
            #:combo
+           #:data-type-p
            #:drag-float
            #:drag-scalar
            #:ensure-from-bool

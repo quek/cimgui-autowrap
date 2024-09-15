@@ -233,6 +233,13 @@
     (list (c-ref size im-vec2 :x)
           (c-ref size im-vec2 :y))))
 
+(defmethod data-type-p ((payload null) data-type)
+  nil)
+
+(defmethod data-type-p (payload data-type)
+  (ensure-to-bool
+   (im-gui-payload-is-data-type payload data-type)))
+
 (defmacro input-text (label var &key (flags 0)
                                   (callback (cffi:null-pointer))
                                   (user-data (cffi:null-pointer)))
