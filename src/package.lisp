@@ -43,6 +43,7 @@
            #:set-cursor-pos
            #:set-drag-drop-payload
            #:set-keyboard-focus-here
+           #:set-next-item-shortcut
            #:set-next-window-size-constraints
 
            #:with-begin

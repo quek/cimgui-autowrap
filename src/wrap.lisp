@@ -362,6 +362,18 @@
 (defmethod set-cursor-pos ((pos im-vec2))
   (%set-cursor-pos pos))
 
+(defun set-keyboard-focus-here (&optional (offset 0))
+  (%set-keyboard-focus-here offset))
+
+(defun set-next-item-shortcut (key-chord &optional (flags 0))
+  (%set-next-item-shortcut key-chord flags))
+
+(defun set-next-window-size-constraints
+    (size-min size-max &key (custom-callback (cffi:null-pointer))
+                         (custom-callback-data (cffi:null-pointer)))
+  (with-vec2* (size-min size-max)
+    (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
+
 (defmacro with-drag-drop-source ((&optional (flag 0)) &body body)
   `(when (ensure-to-bool (ig:begin-drag-drop-source ,flag))
      (unwind-protect
@@ -373,15 +385,6 @@
      (unwind-protect
           (progn ,@body)
        (ig:end-drag-drop-target))))
-
-(defun set-keyboard-focus-here (&optional (offset 0))
-  (%set-keyboard-focus-here offset))
-
-(defun set-next-window-size-constraints
-    (size-min size-max &key (custom-callback (cffi:null-pointer))
-                         (custom-callback-data (cffi:null-pointer)))
-  (with-vec2* (size-min size-max)
-    (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
 
 (defmacro with-group (&body body)
   `(progn

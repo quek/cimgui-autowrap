@@ -35,4 +35,5 @@
                                         ("igSetCursorPos" . "%SET-CURSOR-POS")
                                         ("igSetDragDropPayload" . "%SET-DRAG-DROP-PAYLOAD")
                                         ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")
+                                        ("igSetNextItemShortcut" . "%SET-NEXT-ITEM-SHORTCUT")
                                         ("igSetNextWindowSizeConstraints" . "%SET-NEXT-WINDOW-SIZE-CONSTRAINTS")))
