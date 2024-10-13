@@ -14,15 +14,20 @@
            #:color-picker4
            #:combo
            #:data-type-p
+           #:drag-double
            #:drag-float
            #:drag-scalar
            #:ensure-from-bool
            #:ensure-to-bool
            #:get-cursor-pos
            #:get-drag-drop-payload
+           #:get-item-rect-max
+           #:get-item-rect-min
+           #:get-item-rect-size
            #:get-mouse-pos
            #:get-window-pos
            #:get-window-size
+           #:input-double
            #:invisible-button
            #:is-data-type
            #:is-item-active

@@ -164,6 +164,11 @@
 (defun set-drag-drop-payload (type &key (data (cffi:null-pointer)) (data-size 0) (cond 0))
   (ensure-to-bool (IG::%SET-DRAG-DROP-PAYLOAD type data data-size cond)))
 
+(defmacro drag-double (label value &key (speed 1.0) (min 0.0d0) (max 0.0d0) (format "%.3f") (flags 0))
+  `(drag-scalar ,label +im-gui-data-type-double+ ,value
+                :speed ,speed :min ,min :max ,max
+                :format ,format :flags ,flags))
+
 (defmacro drag-float (lable v &key (speed 1.0) (min 0.0) (max 0.0) (format "%.3f") (flags 0))
   (let ((ptr (gensym)))
     `(autowrap:with-alloc (,ptr :float)
@@ -215,6 +220,24 @@
         nil
         payload)))
 
+(defun get-item-rect-max ()
+  (autowrap:with-alloc (max 'im-vec2)
+    (%get-item-rect-max max)
+    (list (c-ref max im-vec2 :x)
+          (c-ref max im-vec2 :y))))
+
+(defun get-item-rect-min ()
+  (autowrap:with-alloc (min 'im-vec2)
+    (%get-item-rect-min min)
+    (list (c-ref min im-vec2 :x)
+          (c-ref min im-vec2 :y))))
+
+(defun get-item-rect-size ()
+  (autowrap:with-alloc (size 'im-vec2)
+    (%get-item-rect-size size)
+    (list (c-ref size im-vec2 :x)
+          (c-ref size im-vec2 :y))))
+
 (defun get-mouse-pos ()
   (autowrap:with-alloc (pos 'im-vec2)
     (%get-mouse-pos pos)
@@ -259,6 +282,18 @@
                                                  ,buf ,buf-size ,size-arg ,flags
                                                  ,callback ,user-data)))
            (setf ,var (cffi:foreign-string-to-lisp ,buf)))))))
+
+(defmacro input-double (label v &key (step .0d0) (step-fast .0d0) (format "%.6f") (flags 0))
+  (let ((value (gensym "VALUE")))
+    `(autowrap:with-alloc (,value :double)
+       (setf (cffi:mem-ref ,value :double) ,v)
+       (if (ensure-to-bool
+            (%input-double ,label ,value ,step
+                           ,step-fast ,format ,flags))
+           (progn
+             (setf ,v (cffi:mem-ref ,value :double))
+             t)
+           nil))))
 
 (defun invisible-button (label size &optional (flags 0))
   (ensure-to-bool (%%invisible-button label size flags)))
