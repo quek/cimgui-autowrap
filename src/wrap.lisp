@@ -124,6 +124,13 @@
   (with-vec2 (size)
     (%button label size)))
 
+(defun calc-text-size (text &key hide-text-after-double-hash (wrap-width -.0))
+  (autowrap:with-alloc (size 'im-vec2)
+    (%calc-text-size size text (cffi:null-pointer)
+                     (ensure-from-bool hide-text-after-double-hash) wrap-width)
+    (list (c-ref size im-vec2 :x)
+          (c-ref size im-vec2 :y))))
+
 (defmacro color-picker4 (label color &key (flags 0) ref-col)
   (let ((ret (gensym "RET")))
     `(with-color4* ((color ,color)
@@ -352,6 +359,21 @@
 
 (defun open-popup (str-id &optional (popup-flags 0))
   (open-popup-str str-id popup-flags))
+
+(defun path-arc-to (draw-list center radius min max num-segments)
+  (with-vec2 (center)
+    (im-draw-list-path-arc-to draw-list center radius
+                              (coerce min 'single-float)
+                              (coerce max 'single-float)
+                              num-segments)))
+
+(defun path-arc-to-fast (draw-list center radius min-of-12 max-of-12)
+  (with-vec2 (center)
+    (im-draw-list-path-arc-to-fast draw-list center radius
+                                   min-of-12 max-of-12)))
+
+(defun path-stroke (draw-list color &key (flags 0) (thickness 1.0))
+  (im-draw-list-path-stroke draw-list color flags thickness))
 
 (defmethod pop-style (var (val integer))
   (ig:pop-style-color 1))

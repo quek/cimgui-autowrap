@@ -16,6 +16,7 @@
                                         ("igBeginPopupContextItem" . "%BEGIN-POPUP-CONTEXT-ITEM")
                                         ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
                                         ("igButton" . "%BUTTON")
+                                        ("igCalcTextSize" . "%CALC-TEXT-SIZE")
                                         ("igColorPicker4" . "%COLOR-PICKER4")
                                         ("igGetCursorPos" . "%GET-CURSOR-POS")
                                         ("igGetDragDropPayload" . "%GET-DRAG-DROP-PAYLOAD")

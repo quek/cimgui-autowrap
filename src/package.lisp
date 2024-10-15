@@ -11,6 +11,7 @@
            #:begin-popup-context-item
            #:begin-popup-modal
            #:button
+           #:calc-text-size
            #:color-picker4
            #:combo
            #:data-type-p
@@ -42,6 +43,9 @@
            #:is-window-hovered
            #:menu-item
            #:open-popup
+           #:path-arc-to
+           #:path-arc-to-fast
+           #:path-stroke
            #:push-clip-rect
            #:push-id
            #:same-line
