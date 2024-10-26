@@ -45,8 +45,8 @@
   (let ((x-y (gensym)))
     `(let ((,x-y ,(or x-y-list var)))
        (autowrap:with-alloc (,var 'im-vec2)
-         (setf (c-ref ,var im-vec2 :x) (car ,x-y))
-         (setf (c-ref ,var im-vec2 :y) (cadr ,x-y))
+         (setf (c-ref ,var im-vec2 :x) (coerce (car ,x-y) 'single-float))
+         (setf (c-ref ,var im-vec2 :y) (coerce (cadr ,x-y) 'single-float))
          ,@body))))
 
 (defmacro with-vec2* ((&rest vars) &body body)
@@ -372,6 +372,16 @@
     (im-draw-list-path-arc-to-fast draw-list center radius
                                    min-of-12 max-of-12)))
 
+(defun path-fill-concave (draw-list color)
+  (im-draw-list-path-fill-concave draw-list color))
+
+(defun path-fill-convex (draw-list color)
+  (im-draw-list-path-fill-convex draw-list color))
+
+(defun path-line-to (draw-list pos)
+  (with-vec2 (pos)
+    (im-draw-list-path-line-to draw-list pos)))
+
 (defun path-stroke (draw-list color &key (flags 0) (thickness 1.0))
   (im-draw-list-path-stroke draw-list color flags thickness))
 
@@ -430,6 +440,9 @@
                          (custom-callback-data (cffi:null-pointer)))
   (with-vec2* (size-min size-max)
     (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
+
+(defun shortcut (key-chord &optional (flags 0))
+  (ensure-to-bool(shortcut-nil key-chord flags)))
 
 (defmacro with-drag-drop-source ((&optional (flag 0)) &body body)
   `(when (ensure-to-bool (ig:begin-drag-drop-source ,flag))

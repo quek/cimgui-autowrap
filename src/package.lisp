@@ -45,6 +45,9 @@
            #:open-popup
            #:path-arc-to
            #:path-arc-to-fast
+           #:path-fill-concave
+           #:path-fill-convex
+           #:path-line-to
            #:path-stroke
            #:push-clip-rect
            #:push-id
@@ -54,6 +57,7 @@
            #:set-keyboard-focus-here
            #:set-next-item-shortcut
            #:set-next-window-size-constraints
+           #:shortcut
 
            #:with-begin
            #:with-child
