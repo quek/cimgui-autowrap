@@ -58,6 +58,7 @@
            #:set-next-item-shortcut
            #:set-next-window-size-constraints
            #:shortcut
+           #:slider-float
 
            #:with-begin
            #:with-child

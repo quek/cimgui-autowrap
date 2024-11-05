@@ -337,7 +337,7 @@
 (defun is-window-appearing ()
   (ensure-to-bool (%is-window-appearing)))
 
-(defun is-window-hovered (flags)
+(defun is-window-hovered (&optional (flags 0))
   (ensure-to-bool (%is-window-hovered flags)))
 
 (defun is-key-pressed (key &key (repeat t))
@@ -442,7 +442,17 @@
     (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
 
 (defun shortcut (key-chord &optional (flags 0))
-  (ensure-to-bool(shortcut-nil key-chord flags)))
+  (ensure-to-bool (shortcut-nil key-chord flags)))
+
+(defmacro slider-float (label v v-min v-max &key (format "%.3f") (flags 0))
+  (let ((ret (gensym "ret"))
+        (value (gensym "VALUE")))
+   `(cffi:with-foreign-object (,value :float)
+      (setf (cffi:mem-ref ,value :float) ,v)
+      (let ((,ret (ensure-to-bool (%slider-float ,label ,value ,v-min ,v-max ,format ,flags))))
+        (when ,ret
+          (setf ,v (cffi:mem-ref ,value :float)))
+        ,ret))))
 
 (defmacro with-drag-drop-source ((&optional (flag 0)) &body body)
   `(when (ensure-to-bool (ig:begin-drag-drop-source ,flag))
