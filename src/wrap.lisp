@@ -215,6 +215,10 @@
            (ensure-to-bool (%drag-scalar ,lable ,data-type ,ptr ,speed ,p-min ,p-max ,format ,flags))
          (setf ,data (autowrap:c-aref ,ptr 0 ,ptr-type))))))
 
+(defun dummy (size)
+  (with-vec2 (size)
+    (%dummy size)))
+
 (defun get-cursor-pos ()
   (autowrap:with-alloc (pos 'im-vec2)
     (%get-cursor-pos pos)

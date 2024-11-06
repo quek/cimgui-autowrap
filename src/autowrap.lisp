@@ -20,6 +20,7 @@
   ("igButton" . "%BUTTON")
   ("igCalcTextSize" . "%CALC-TEXT-SIZE")
   ("igColorPicker4" . "%COLOR-PICKER4")
+  ("igDummy" . "%DUMMY")
   ("igGetCursorPos" . "%GET-CURSOR-POS")
   ("igGetDragDropPayload" . "%GET-DRAG-DROP-PAYLOAD")
   ("igGetItemRectMax" . "%GET-ITEM-RECT-MAX")

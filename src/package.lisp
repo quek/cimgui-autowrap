@@ -18,6 +18,7 @@
            #:drag-double
            #:drag-float
            #:drag-scalar
+           #:dummy
            #:ensure-from-bool
            #:ensure-to-bool
            #:get-cursor-pos
