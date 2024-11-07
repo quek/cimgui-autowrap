@@ -45,4 +45,6 @@
   ("igSetKeyboardFocusHere" . "%SET-KEYBOARD-FOCUS-HERE")
   ("igSetNextItemShortcut" . "%SET-NEXT-ITEM-SHORTCUT")
   ("igSetNextWindowSizeConstraints" . "%SET-NEXT-WINDOW-SIZE-CONSTRAINTS")
-  ("igSliderFloat" . "%SLIDER-FLOAT")))
+  ("igSliderFloat" . "%SLIDER-FLOAT")
+  ("igVSliderFloat" . "%V-SLIDER-FLOAT")
+  ("igVSliderScalar" . "%V-SLIDER-SCALAR")))

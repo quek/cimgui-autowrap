@@ -60,6 +60,8 @@
            #:set-next-window-size-constraints
            #:shortcut
            #:slider-float
+           #:v-slider-float
+           #:v-slider-scalar
 
            #:with-begin
            #:with-child

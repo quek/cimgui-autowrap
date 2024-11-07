@@ -458,6 +458,55 @@
           (setf ,v (cffi:mem-ref ,value :float)))
         ,ret))))
 
+(defmacro v-slider-float (label size v v-min v-max &key (format "%.3f") (flags 0))
+  (let ((ret (gensym "ret"))
+        (value (gensym "VALUE"))
+        ($size (gensym "SIZE")))
+    `(with-vec2 (,$size ,size)
+       (cffi:with-foreign-object (,value :float)
+         (setf (cffi:mem-ref ,value :float) ,v)
+         (let ((,ret (ensure-to-bool (%v-slider-float ,label ,$size ,value ,v-min ,v-max ,format ,flags))))
+           (when ,ret
+             (setf ,v (cffi:mem-ref ,value :float)))
+           ,ret)))))
+
+(defmacro v-slider-scalar (lable size data-type data min max
+                           &key (format (cffi:null-pointer)) (flags 0))
+  (let (($size (gensym "SIZE"))
+        (p-data (gensym "DATA"))
+        (p-min (gensym "MIN"))
+        (p-max (gensym "MAX"))
+        (ret (gensym "RET"))
+        (ptr-type (ecase data-type
+                    (+im-gui-data-type-s8+ :int8)
+                    (+im-gui-data-type-u8+ :uint8)
+                    (+im-gui-data-type-s16+ :int16)
+                    (+im-gui-data-type-u16+ :uint16)
+                    (+im-gui-data-type-s32+ :int32)
+                    (+im-gui-data-type-u32+ :uint32)
+                    (+im-gui-data-type-s64+ :int64)
+                    (+im-gui-data-type-u64+ :uint64)
+                    (+im-gui-data-type-float+ :float)
+                    (+im-gui-data-type-double+ :double))))
+    `(with-vec2 (,$size ,size)
+       (autowrap:with-many-alloc ((,p-data ,ptr-type)
+                                  (,p-min ,ptr-type)
+                                  (,p-max ,ptr-type))
+         (setf (autowrap:c-aref ,p-data 0 ,ptr-type) ,data)
+         (setf (autowrap:c-aref ,p-min  0 ,ptr-type) ,min)
+         (setf (autowrap:c-aref ,p-max  0 ,ptr-type) ,max)
+         (let ((,ret (ensure-to-bool (%v-slider-scalar ,lable
+                                                       ,$size
+                                                       ,data-type
+                                                       ,p-data
+                                                       ,p-min
+                                                       ,p-max
+                                                       ,format
+                                                       ,flags))))
+           (when ,ret
+             (setf ,data (autowrap:c-aref ,p-data 0 ,ptr-type)))
+           ,ret)))))
+
 (defmacro with-drag-drop-source ((&optional (flag 0)) &body body)
   `(when (ensure-to-bool (ig:begin-drag-drop-source ,flag))
      (unwind-protect
