@@ -19,6 +19,7 @@
   ("igBeginPopupModal" . "%BEGIN-POPUP-MODAL")
   ("igButton" . "%BUTTON")
   ("igCalcTextSize" . "%CALC-TEXT-SIZE")
+  ("igCheckbox" . "%CHECKBOX")
   ("igColorPicker4" . "%COLOR-PICKER4")
   ("igDummy" . "%DUMMY")
   ("igGetCursorPos" . "%GET-CURSOR-POS")

@@ -131,6 +131,11 @@
     (list (c-ref size im-vec2 :x)
           (c-ref size im-vec2 :y))))
 
+(defmacro checkbox (label v)
+  (let ((value (gensym "VALUE")))
+    `(with-bool (,value ,v)
+       (%checkbox ,label ,value))))
+
 (defmacro color-picker4 (label color &key (flags 0) ref-col)
   (let ((ret (gensym "RET")))
     `(with-color4* ((color ,color)

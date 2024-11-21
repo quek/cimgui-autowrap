@@ -12,6 +12,7 @@
            #:begin-popup-modal
            #:button
            #:calc-text-size
+           #:checkbox
            #:color-picker4
            #:combo
            #:data-type-p
