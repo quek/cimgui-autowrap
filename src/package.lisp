@@ -59,6 +59,7 @@
            #:set-keyboard-focus-here
            #:set-next-item-shortcut
            #:set-next-window-size-constraints
+           #:set-window-focus
            #:shortcut
            #:slider-float
            #:v-slider-float

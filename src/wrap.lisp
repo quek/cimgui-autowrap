@@ -450,6 +450,11 @@
   (with-vec2* (size-min size-max)
     (%set-next-window-size-constraints size-min size-max custom-callback custom-callback-data)))
 
+(defun set-window-focus (&optional name)
+  (if name
+      (set-window-focus-str name)
+      (set-window-focus-nil)))
+
 (defun shortcut (key-chord &optional (flags 0))
   (ensure-to-bool (shortcut-nil key-chord flags)))
 
